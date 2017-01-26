@@ -9,8 +9,8 @@ namespace ConsoleApplication2
     public interface ICompteBancaire
     {
 
-        void accept( IVisitor visitor, int item=0) ;
-
+        void accept( IVisitor visitor, int item) ;
+        void accept(IVisitor visitor);
 
 
     }
@@ -22,12 +22,19 @@ namespace ConsoleApplication2
         public double solde { get; set; }
         public List<double> transactions = new List<double>(20);
 
-        void ICompteBancaire.accept(IVisitor visitor, int item=0)
+        void ICompteBancaire.accept(IVisitor visitor, int item)
         {
             visitor.visit(this, item);
 
 
         }
+        void ICompteBancaire.accept(IVisitor visitor)
+        {
+
+            visitor.visit(this);
+
+        }
+
 
 
     }
@@ -35,10 +42,11 @@ namespace ConsoleApplication2
     {
 
         void visit(CCompteBancaire compte, int item);
+        void visit(CCompteBancaire compte);
 
     }
 
-    public class DebitVisitor : IVisitor
+    public class CDebitVisitor : IVisitor
     {
         void IVisitor.visit(CCompteBancaire compte, int item)
         {
@@ -49,7 +57,7 @@ namespace ConsoleApplication2
                 compte.solde -= item;
                 if (compte.transactions.Count() < 20)
                 {
-                    compte.transactions[compte.transactions.Count()] = -item;
+                    compte.transactions.Add(-item);
 
                 }
                 else
@@ -58,16 +66,18 @@ namespace ConsoleApplication2
                     {
                         compte.transactions[i] = compte.transactions[i + 1];
                     }
-                    compte.transactions[20] = -item;
+                    compte.transactions[19] = -item;
                 }
             }
             else
                 Console.WriteLine("solde isuffisant");
 
         }
+        void IVisitor.visit(CCompteBancaire compte)
+        { }
 
     }
-    public class CreditVisitor : IVisitor
+    public class CCreditVisitor : IVisitor
     {
         void IVisitor.visit(CCompteBancaire compte, int item)
         {
@@ -78,7 +88,7 @@ namespace ConsoleApplication2
                 compte.solde += item;
                 if (compte.transactions.Count() < 20)
                 {
-                    compte.transactions[compte.transactions.Count()] = item;
+                    compte.transactions.Add(item);
 
                 }
                 else
@@ -87,17 +97,23 @@ namespace ConsoleApplication2
                     {
                         compte.transactions[i] = compte.transactions[i + 1];
                     }
-                    compte.transactions[20] = item;
+                    compte.transactions[19] = item;
                 }
             }
 
         }
+        void IVisitor.visit(CCompteBancaire compte)
+        { }
 
-    }
+        }
 
-    public class HistoriqueVisitor : IVisitor
+    public class CHistoriqueVisitor : IVisitor
     {
-        void IVisitor.visit(CCompteBancaire compte, int item = 0)
+        void IVisitor.visit(CCompteBancaire compte, int item)
+        { }
+
+
+            void IVisitor.visit(CCompteBancaire compte)
         {
             foreach( double i in compte.transactions)
             {
@@ -112,6 +128,24 @@ namespace ConsoleApplication2
     {
         static void Main(string[] args)
         {
+            ICompteBancaire compte = new CCompteBancaire();
+            IVisitor debit = new CDebitVisitor();
+            IVisitor credit = new CCreditVisitor();
+            IVisitor historique = new CHistoriqueVisitor();
+            for (int i = 1; i < 21; i++)
+            {
+                compte.accept(credit, i);
+            }
+
+            compte.accept(credit, 25);
+
+
+            compte.accept(debit, 19);
+
+
+            compte.accept(historique);
+
+        }
+
         }
     }
-}
