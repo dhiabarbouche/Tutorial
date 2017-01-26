@@ -1,0 +1,255 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication4
+{
+    class Program
+    {
+        public delegate void GenericListVisitor<T>(T value);
+
+        public interface IGenericChainedList<T> : ICollection<T>
+                                           where T : IEquatable<T>
+        {
+            void Visit(GenericListVisitor<T> visitor);
+            void Sort(IComparer<T> comparator);
+            void affiche();
+            void Reverse();
+        }
+
+        public class CGenericChainedList<T> : IGenericChainedList<T> where T : IEquatable<T>
+        {
+            T value { get; set; }
+            private CGenericChainedList<T> next;
+            private static CGenericChainedList<T> first;
+            private static CGenericChainedList<T> last;
+            public static int longueur;
+
+            public void Addo(T item)
+            {
+                if(longueur==0 )
+                {
+
+                    this.value = item;
+                    first = this;
+                    last = this;
+                    longueur += 1;
+                }
+                else
+                {
+                    CGenericChainedList<T> tempo = new CGenericChainedList<T>();
+                    tempo.value = item;
+                    longueur += 1;
+                    last.next = tempo;
+                    last = last.next;
+
+                }
+
+
+            }
+            void IGenericChainedList<T>.affiche()
+            {
+                if (longueur > 0)
+                {
+                    CGenericChainedList<T> tempi = new CGenericChainedList<T>();
+                    tempi = first;
+                    for (int i = 0; i < longueur; i++)
+                    {
+                        Console.WriteLine(tempi.value);
+                        tempi = tempi.next;
+
+                    }
+                }
+                else Console.WriteLine("liste vide :)");
+
+            }
+
+            bool Removo (T item)
+            {
+                int trouve = 0;
+                int index_long = 0;
+                CGenericChainedList<T> chaine_index = first;
+                while ( (index_long<longueur)  & (trouve==0))
+                {
+                    if (longueur == 0 )
+                    {
+                        Console.WriteLine("chaine vide");
+                        trouve = 1;
+
+
+                    }
+                    else if(longueur ==1)
+                    {
+                        if (first.value.Equals(item))
+                        {
+                            first = new CGenericChainedList<T>();
+                            last = new CGenericChainedList<T>();
+                           
+                            longueur -= 1;
+                            return true;
+                        }
+                        else { Console.WriteLine("Item non trouvé dans la liste "); return false; }
+                       
+
+                    }
+                    else if (index_long == longueur -1)
+                    {
+                        if (chaine_index.next.value.Equals(item))
+                        {
+                            last = chaine_index;
+                            trouve = 1;
+                            longueur -= 1;
+                            return true;
+                        }
+                        else
+                        {
+
+                           
+                            return false;
+
+                        }
+
+                    }
+                    else  if (first.value.Equals(item))
+                    {
+                        first = first.next;
+                        longueur -= 1;
+                        trouve = 1;
+                        return true; 
+                    }
+                    else if ( chaine_index.next.value.Equals(item) )
+                    {
+                        trouve = 1;
+                        longueur -= 1;
+                        chaine_index.next = chaine_index.next.next;
+                        return true;
+
+                    }
+
+
+
+                    index_long += 1;
+                    chaine_index = chaine_index.next; 
+                }
+
+
+                return false;
+            }
+
+
+
+
+
+
+
+                                                                                                                      public List<T> list;
+
+
+
+
+
+
+
+
+            void IGenericChainedList<T>.Visit(GenericListVisitor<T> visitor)
+            {
+
+                visitor(this.list[0]);
+
+            }
+
+            void IGenericChainedList<T>.Sort(IComparer<T> comparator)
+            {
+                this.list.Sort(comparator);
+
+            }
+
+            void IGenericChainedList<T>.Reverse()
+            {
+                this.list.Reverse();
+
+            }
+
+            void ICollection<T>.Add(T item)
+            {
+                this.Addo(item);
+
+            }
+            void ICollection<T>.Clear()
+            {if (longueur > 0)
+                {
+                    T item = first.value;
+                    int index_long = 0;
+                    int longueur_initiale = longueur;
+                    while ( index_long< longueur_initiale)
+                    {
+                        this.Removo(item);
+                        item = first.value;
+
+                        index_long += 1;
+                    }
+                }
+            }
+            void ICollection<T>.CopyTo(T[] array, int index)
+            {
+                this.list.CopyTo(array,index);
+            }
+            bool ICollection<T>.Remove(T item)
+            {
+               return this.Removo(item);
+
+            }
+            int ICollection<T>.Count
+            {
+                get { return this.list.Count; }
+
+            }
+            bool ICollection<T>.Contains(T item)
+            {
+                return this.list.Contains(item);
+
+            }
+            bool ICollection<T>.IsReadOnly
+            {
+                get { return false ; }
+
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+               return this.list.GetEnumerator();
+
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+        }
+
+
+        static void Main(string[] args)
+        {
+            IGenericChainedList<int> chaine = new CGenericChainedList<int>() ;
+       
+            for (int i = 0; i < 20; i++)
+            {
+                chaine.Add(i);
+            }
+            chaine.affiche();
+            
+            Console.WriteLine(" longueur"+CGenericChainedList<int>.longueur);
+            chaine.Clear();
+            
+     
+            chaine.affiche();
+            Console.WriteLine(" longueur" + CGenericChainedList<int>.longueur);
+
+
+        }
+    }
+}
