@@ -1,0 +1,117 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication2
+{
+    public interface ICompteBancaire
+    {
+
+        void accept( IVisitor visitor, int item=0) ;
+
+
+
+    }
+
+    public class CCompteBancaire : ICompteBancaire
+    {
+
+
+        public double solde { get; set; }
+        public List<double> transactions = new List<double>(20);
+
+        void ICompteBancaire.accept(IVisitor visitor, int item=0)
+        {
+            visitor.visit(this, item);
+
+
+        }
+
+
+    }
+    public interface IVisitor
+    {
+
+        void visit(CCompteBancaire compte, int item);
+
+    }
+
+    public class DebitVisitor : IVisitor
+    {
+        void IVisitor.visit(CCompteBancaire compte, int item)
+        {
+            if (item<=0)
+            { Console.WriteLine("vous pouvez debiter qu'un montant positif"); }
+            else if (item <= compte.solde)
+            {
+                compte.solde -= item;
+                if (compte.transactions.Count() < 20)
+                {
+                    compte.transactions[compte.transactions.Count()] = -item;
+
+                }
+                else
+                {
+                    for (int i = 0; i < compte.transactions.Count() - 1; i++)
+                    {
+                        compte.transactions[i] = compte.transactions[i + 1];
+                    }
+                    compte.transactions[20] = -item;
+                }
+            }
+            else
+                Console.WriteLine("solde isuffisant");
+
+        }
+
+    }
+    public class CreditVisitor : IVisitor
+    {
+        void IVisitor.visit(CCompteBancaire compte, int item)
+        {
+            if (item <= 0)
+            { Console.WriteLine("vous pouvez crediter qu'un montant positif"); }
+            else 
+            {
+                compte.solde += item;
+                if (compte.transactions.Count() < 20)
+                {
+                    compte.transactions[compte.transactions.Count()] = item;
+
+                }
+                else
+                {
+                    for (int i = 0; i < compte.transactions.Count() - 1; i++)
+                    {
+                        compte.transactions[i] = compte.transactions[i + 1];
+                    }
+                    compte.transactions[20] = item;
+                }
+            }
+
+        }
+
+    }
+
+    public class HistoriqueVisitor : IVisitor
+    {
+        void IVisitor.visit(CCompteBancaire compte, int item = 0)
+        {
+            foreach( double i in compte.transactions)
+            {
+                Console.WriteLine(i);
+
+            }
+        }
+
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+        }
+    }
+}
