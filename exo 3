@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication3
+{
+    public static class ExtensionMethods
+    {
+        public static void AddRange(this HashSet<int> o, List<int> list)
+        {
+            foreach (int item in list)
+            {
+                o.Add(item);
+
+            }
+        }
+        public static void AddRange(this HashSet<int> o, int[] tableau)
+        {
+            foreach (int item in tableau)
+            {
+                o.Add(item);
+
+            }
+        }
+    }
+    class Program
+    {
+       
+        static void Main(string[] args)
+        {
+            HashSet<int> my = new HashSet<int>();
+            HashSet<int> mon = new HashSet<int>();
+
+
+            my.AddRange(new[] { 1, 2, 3, 4, 5 });
+            foreach( int item in my)
+            {
+                Console.WriteLine(item);
+            }
+
+            mon.AddRange(new List<int> { 10, 20, 30, 40, 50 });
+            foreach (int item in mon)
+            {
+                Console.WriteLine(item);
+            }
+
+
+
+        }
+    }
+}
