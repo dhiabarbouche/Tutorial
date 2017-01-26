@@ -1,0 +1,110 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApplication1
+{
+    class Program
+    {
+        public delegate void ListVisitor(int i);
+       
+        public interface IChainedList
+        {
+
+         int Count { get; }
+        void Add(int item);
+        void Remove(int item);
+        void Accept(ListVisitor visitor, int item);
+        void Sort(IComparer<int> comparator);
+
+       void Reverse();
+        }
+
+        public class CChainedList : IChainedList
+        {
+            public List<int> listechainee = new List<int>();
+
+            void IChainedList.Add( int item)
+            {
+                this.listechainee.Add(item);
+
+            }
+            void IChainedList.Remove(int item)
+            {
+                if (listechainee.Count == 0)
+                { Console.WriteLine( " Empty list") ; }
+                else {
+                    this.listechainee.Remove(item);
+                }
+            }
+
+            int IChainedList.Count
+            {
+                get { return this.listechainee.Count; }
+            }
+         
+
+            void IChainedList.Accept(ListVisitor visitor, int item)
+            {
+             
+                    visitor(item);   
+
+                
+               
+            }
+            void IChainedList.Sort(IComparer<int> comparator)
+            {
+            this.listechainee.Sort(comparator) ;
+            }
+
+            void IChainedList.Reverse()
+            {
+                int a = this.listechainee.Count;
+                int b =(int) Math.Floor((double)a / 2);
+                if (a == 0)
+                {
+                    Console.WriteLine("liste vide");
+
+
+                }
+                else
+                {
+                    for (int i = 0; i < b; i++)
+                    {
+                        int temp = this.listechainee[i];
+                        this.listechainee[i] = this.listechainee[a - i-1];
+                        this.listechainee[a - i-1] = temp;
+
+                    }
+                }
+            }
+        }
+
+
+        static void Main(string[] args)
+        {
+
+
+            ListVisitor mondelegue = delegate( int pra)
+            {
+
+
+            };
+            
+            IChainedList dhia = new CChainedList();
+            
+            dhia.Add(1);
+            dhia.Add(2); dhia.Add(5); dhia.Add(3); dhia.Add(4);
+            dhia.Remove(2);
+           
+            dhia.Reverse();
+            int s = dhia.Count;
+            dhia.Accept(delegate (int item) { dhia.Add(item); }, 5);
+            
+        }
+        
+
+    }
+}
