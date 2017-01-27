@@ -7,9 +7,43 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication4
 {
+    public static class ExtensionMethods
+    {
+        public delegate bool Test_Func(int item);
+        public static void AddRange(this ICollection<int> o, IEnumerable<int> set)
+        {
+            foreach(int item in set)
+            {
+                o.Add(item);
+
+            }
+        }
+
+        public static List<int> MyWhere(this IEnumerable<int> o, Test_Func test_func  )
+        {
+            List<int> tempo = new List<int>();
+            foreach ( int item in o)
+            {
+                if (test_func(item)) tempo.Add(item);
+
+
+            }
+
+            return tempo;
+        }
+
+
+    }
+
+
+
     class Program
     {
         public delegate void GenericListVisitor<T>(T value);
+        public delegate bool test_func(int item);
+
+
+
 
         public interface IGenericChainedList<T> : ICollection<T>
                                            where T : IEquatable<T>
@@ -402,27 +436,9 @@ namespace ConsoleApplication4
         static void Main(string[] args)
         {
 
-            moncomparateur comparateur = new moncomparateur();
-            IGenericChainedList<int> chaine = new CGenericChainedList<int>() ;
-       
-            for (int i = 0; i <6 ; i++)
-            {
-                chaine.Add(20-i);
-                chaine.Add(35-i);
-                chaine.Add(7 - i);
-                
-            }
-            chaine.affiche();
-            Console.WriteLine("/////////////////////////////////////////////");
-            Console.WriteLine("chaine triée");
-            chaine.Sort(comparateur);
+            var hundredFirstElement = Enumerable.Range(1, 100);
+            var evenNumbers = hundredFirstElement.MyWhere(e => e % 2 == 0).ToList();
 
-            chaine.affiche();
-
-            Console.WriteLine("/////////////////////////////////////////////");
-
-            chaine.Visit((x) => Console.WriteLine(x));
-
-            }
+        }
     }
 }
