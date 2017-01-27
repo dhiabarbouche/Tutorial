@@ -8,17 +8,9 @@ namespace ConsoleApplication3
 {
     public static class ExtensionMethods
     {
-        public static void AddRange(this HashSet<int> o, List<int> list)
+        public static void AddRange<T>(this HashSet<T> o, IEnumerable<T> list)
         {
-            foreach (int item in list)
-            {
-                o.Add(item);
-
-            }
-        }
-        public static void AddRange(this HashSet<int> o, int[] tableau)
-        {
-            foreach (int item in tableau)
+            foreach (T item in list)
             {
                 o.Add(item);
 
