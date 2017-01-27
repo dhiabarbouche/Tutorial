@@ -32,7 +32,7 @@ namespace ConsoleApplication4
         }
             public class CGenericChainedList<T> : IGenericChainedList<T> where T : IEquatable<T>
         {
-            T value { get; set; }
+            public T value { get; set; }
             private CGenericChainedList<T> next;
             private static CGenericChainedList<T> first;
             private static CGenericChainedList<T> last;
@@ -60,6 +60,24 @@ namespace ConsoleApplication4
 
 
             }
+            public CGenericChainedList<T> getfirst()
+            {
+                return first;
+
+            }
+            public CGenericChainedList<T> getlast()
+            {
+                return last;
+
+            }
+
+            public CGenericChainedList<T> getnext()
+            {
+                return next;
+
+            }
+
+
             void IGenericChainedList<T>.affiche()
             {
                 if (longueur > 0)
@@ -149,25 +167,10 @@ namespace ConsoleApplication4
                 return false;
             }
 
-
-
-
-
-
-
-                                                                                                                      public List<T> list;
-
-
-
-
-
-
-
-
             void IGenericChainedList<T>.Visit(GenericListVisitor<T> visitor)
             {
 
-                visitor(this.list[0]);
+                visitor(this.value);
 
             }
 
@@ -259,7 +262,27 @@ namespace ConsoleApplication4
             }
             void ICollection<T>.CopyTo(T[] array, int index)
             {
-                this.list.CopyTo(array,index);
+                if ((array.Length - index) < longueur )
+                {
+                    Console.WriteLine("longueur de tableau non suffisante pour contenir la liste");
+
+                }
+               else{
+
+                    CGenericChainedList<T> tempi = new CGenericChainedList<T>();
+                    tempi = first;
+
+
+                    for (int i = 0; i < longueur; i++)
+                    {
+                        array[index + i] = tempi.value;
+
+
+                        tempi = tempi.next;
+
+
+                    }
+                }
             }
             bool ICollection<T>.Remove(T item)
             {
@@ -268,13 +291,33 @@ namespace ConsoleApplication4
             }
             int ICollection<T>.Count
             {
-                get { return this.list.Count; }
+                get { return longueur ; }
 
             }
             bool ICollection<T>.Contains(T item)
             {
-                return this.list.Contains(item);
+                if (longueur == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    CGenericChainedList<T> tempi = new CGenericChainedList<T>();
+                    tempi = first;
 
+
+                    for (int i = 0; i < longueur; i++)
+                    {
+                        if (tempi.value.Equals(item))
+                        {
+                            return true;
+
+                        }
+                        tempi = tempi.next;
+
+                    }
+                    return false;
+                }
             }
             bool ICollection<T>.IsReadOnly
             {
@@ -284,16 +327,78 @@ namespace ConsoleApplication4
 
             public IEnumerator<T> GetEnumerator()
             {
-               return this.list.GetEnumerator();
+               MaClassEnum<T> tempo = new MaClassEnum(this);
 
+                return tempo;
             }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return GetEnumerator();
+                return (IEnumerator) GetEnumerator();
             }
 
         }
+        public class MaClassEnum<T> : IEnumerator<T> where T : IEquatable<T>
+        {
+            CGenericChainedList<T> local = new CGenericChainedList<T>();
+            int position = -1;
+
+            public MaClassEnum(CGenericChainedList<T> list)
+            {
+                local = list;
+            }
+
+
+            public bool MoveNext()
+            {
+                position++;
+                return (position < local.Count() );
+            }
+
+            public void Reset()
+            {
+                position = -1;
+            }
+            void IDisposable.Dispose() { }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    return Current;
+                }
+            }
+            public T Current
+            {
+                get
+                {
+                    CGenericChainedList<T> tempi = new CGenericChainedList<T>();
+                    tempi = local.getfirst();
+
+                    if (position > 0)
+                    {
+                        for (int i = 0; i < position; i++)
+                        {
+                            tempi = tempi.getnext();
+
+                        }
+                        return tempi.value;
+                    }
+                    else
+                    {
+                        return local.getfirst().value;
+                    }
+                }
+            }
+
+
+        }
+
+
+
+
+
+
 
 
         static void Main(string[] args)
@@ -309,17 +414,7 @@ namespace ConsoleApplication4
             }
 
             chaine.affiche();
-            Console.WriteLine("now reverse");
-            chaine.Reverse();
-            chaine.affiche();
-
-
-            Console.WriteLine(" longueur" + CGenericChainedList<int>.longueur);
-            moncomparateur comparateur = new moncomparateur();
-            Console.WriteLine("now sort");
-            chaine.Sort(comparateur);
-
-            chaine.affiche();
+            Console.WriteLine(chaine.Contains(20));
         }
     }
 }
