@@ -157,8 +157,6 @@ namespace ConsoleApplication4
 
                     }
 
-
-
                     index_long += 1;
                     chaine_index = chaine_index.next; 
                 }
@@ -327,7 +325,7 @@ namespace ConsoleApplication4
 
             public IEnumerator<T> GetEnumerator()
             {
-               MaClassEnum<T> tempo = new MaClassEnum(this);
+               MaClassEnum<T> tempo = new MaClassEnum<T>(this);
 
                 return tempo;
             }
@@ -412,9 +410,13 @@ namespace ConsoleApplication4
                 chaine.Add(7 - i);
                 
             }
-
             chaine.affiche();
-            Console.WriteLine(chaine.Contains(20));
-        }
+
+            Console.WriteLine("/////////////////////////////////////////////");
+            foreach (int item in chaine)
+            {
+                Console.WriteLine(item);
+            }
+            }
     }
 }
