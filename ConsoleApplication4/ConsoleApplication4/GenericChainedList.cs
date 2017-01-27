@@ -8,15 +8,14 @@ namespace ConsoleApplication4
     {
         public T value { get; set; }
         private GenericChainedList<T> next;
-        private static GenericChainedList<T> first;
-        private static GenericChainedList<T> last;
-        public static int longueur;
-
+        private  GenericChainedList<T> first;
+        private  GenericChainedList<T> last;
+        public  int longueur;
         public void Addo(T item)
         {
             if (longueur == 0)
             {
-
+                
                 this.value = item;
                 first = this;
                 last = this;
