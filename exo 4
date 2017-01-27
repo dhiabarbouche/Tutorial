@@ -167,8 +167,8 @@ namespace ConsoleApplication4
 
             void IGenericChainedList<T>.Visit(GenericListVisitor<T> visitor)
             {
-
-                visitor(this.value);
+                foreach (T item in this)
+                { visitor(item); }
 
             }
 
@@ -401,6 +401,8 @@ namespace ConsoleApplication4
 
         static void Main(string[] args)
         {
+
+            moncomparateur comparateur = new moncomparateur();
             IGenericChainedList<int> chaine = new CGenericChainedList<int>() ;
        
             for (int i = 0; i <6 ; i++)
@@ -411,12 +413,16 @@ namespace ConsoleApplication4
                 
             }
             chaine.affiche();
+            Console.WriteLine("/////////////////////////////////////////////");
+            Console.WriteLine("chaine triée");
+            chaine.Sort(comparateur);
+
+            chaine.affiche();
 
             Console.WriteLine("/////////////////////////////////////////////");
-            foreach (int item in chaine)
-            {
-                Console.WriteLine(item);
-            }
+
+            chaine.Visit((x) => Console.WriteLine(x));
+
             }
     }
 }
