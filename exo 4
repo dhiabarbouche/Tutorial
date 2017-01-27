@@ -20,7 +20,17 @@ namespace ConsoleApplication4
             void Reverse();
         }
 
-        public class CGenericChainedList<T> : IGenericChainedList<T> where T : IEquatable<T>
+        public class moncomparateur : IComparer<int>
+        {
+            public int Compare(int x, int y)
+            {
+                if (x == y) return 0;
+                if (x > y) return 1;
+                else return -1;
+            }
+
+        }
+            public class CGenericChainedList<T> : IGenericChainedList<T> where T : IEquatable<T>
         {
             T value { get; set; }
             private CGenericChainedList<T> next;
@@ -163,13 +173,67 @@ namespace ConsoleApplication4
 
             void IGenericChainedList<T>.Sort(IComparer<T> comparator)
             {
-                this.list.Sort(comparator);
+                if (longueur == 0)
+                {
+                    Console.WriteLine("liste vide");
+                }
+                else
+                {
+                    CGenericChainedList<T> tempi1 = new CGenericChainedList<T>();
+                    CGenericChainedList<T> tempi2 = new CGenericChainedList<T>();
 
+                    tempi1 = first;
+                    T tempo;
+                    for (int i = 0; i < longueur - 1; i++)
+                    {
+                        tempi2 = tempi1.next;
+                        for (int j = i + 1; j < longueur; j++)
+                        {
+
+                            if ((comparator.Compare(tempi1.value, tempi2.value) > 0))
+                            {
+                                tempo = tempi1.value;
+                                tempi1.value = tempi2.value;
+                                tempi2.value = tempo;
+                            }
+                            tempi2 = tempi2.next;
+                        }
+                        tempi1 = tempi1.next;
+                    }
+                }
+              
             }
 
             void IGenericChainedList<T>.Reverse()
             {
-                this.list.Reverse();
+                if (longueur == 0)
+                {
+                    Console.WriteLine("liste vide");
+
+                }
+                else
+                {
+                    CGenericChainedList<T> tempi1 = new CGenericChainedList<T>();
+                    CGenericChainedList<T> tempi2 = new CGenericChainedList<T>();
+
+                    tempi1 = first;
+                    T tempo;
+                    for (int i = 0; i < longueur - 1; i++)
+                    {
+                        tempi2 = tempi1.next;
+                        for (int j = i + 1; j < longueur; j++)
+                        {
+
+
+                            tempo = tempi1.value;
+                            tempi1.value = tempi2.value;
+                            tempi2.value = tempo;
+
+                            tempi2 = tempi2.next;
+                        }
+                        tempi1 = tempi1.next;
+                    }
+                }
 
             }
 
@@ -236,20 +300,26 @@ namespace ConsoleApplication4
         {
             IGenericChainedList<int> chaine = new CGenericChainedList<int>() ;
        
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i <6 ; i++)
             {
-                chaine.Add(i);
+                chaine.Add(20-i);
+                chaine.Add(35-i);
+                chaine.Add(7 - i);
+                
             }
+
             chaine.affiche();
-            
-            Console.WriteLine(" longueur"+CGenericChainedList<int>.longueur);
-            chaine.Clear();
-            
-     
+            Console.WriteLine("now reverse");
+            chaine.Reverse();
             chaine.affiche();
+
+
             Console.WriteLine(" longueur" + CGenericChainedList<int>.longueur);
+            moncomparateur comparateur = new moncomparateur();
+            Console.WriteLine("now sort");
+            chaine.Sort(comparateur);
 
-
+            chaine.affiche();
         }
     }
 }
