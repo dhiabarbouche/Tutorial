@@ -15,7 +15,6 @@ namespace ConsoleApplication4
             local = list;
         }
 
-
         public bool MoveNext()
         {
             position++;
@@ -35,6 +34,7 @@ namespace ConsoleApplication4
                 return Current;
             }
         }
+        //TODO : Please avoid property in O(n). It must be in O(1)
         public T Current
         {
             get
@@ -47,7 +47,6 @@ namespace ConsoleApplication4
                     for (int i = 0; i < position; i++)
                     {
                         tempi = tempi.getnext();
-
                     }
                     return tempi.value;
                 }
@@ -57,7 +56,6 @@ namespace ConsoleApplication4
                 }
             }
         }
-
 
     }
 }

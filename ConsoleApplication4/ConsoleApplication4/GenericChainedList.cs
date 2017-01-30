@@ -8,14 +8,16 @@ namespace ConsoleApplication4
     {
         public T value { get; set; }
         private GenericChainedList<T> next;
-        private  GenericChainedList<T> first;
-        private  GenericChainedList<T> last;
-        public  int longueur;
+        private GenericChainedList<T> first;
+        private GenericChainedList<T> last;
+        //TODO : don't mix french and english
+        public int longueur;
+
+//TODO : Why Addo ? 
         public void Addo(T item)
         {
             if (longueur == 0)
             {
-                
                 this.value = item;
                 first = this;
                 last = this;
@@ -28,29 +30,27 @@ namespace ConsoleApplication4
                 longueur += 1;
                 last.next = tempo;
                 last = last.next;
-
             }
 
-
         }
+
+//TODO : We never use that kind of function. We prefer properties
         public GenericChainedList<T> getfirst()
         {
             return first;
-
         }
+
         public GenericChainedList<T> getlast()
         {
             return last;
-
         }
 
         public GenericChainedList<T> getnext()
         {
             return next;
-
         }
 
-
+//TODO : Why don't you simply define the print function ?
         void IGenericChainedList<T>.affiche()
         {
             if (longueur > 0)
@@ -61,25 +61,25 @@ namespace ConsoleApplication4
                 {
                     Console.WriteLine(tempi.value);
                     tempi = tempi.next;
-
                 }
             }
             else Console.WriteLine("liste vide :)");
-
         }
 
+//TODO : Why removo
         bool Removo(T item)
         {
+            //TODO : Please refactor. It must be simpler and avoid multiple return per function
             int trouve = 0;
             int index_long = 0;
             GenericChainedList<T> chaine_index = first;
+
             while ((index_long < longueur) & (trouve == 0))
             {
                 if (longueur == 0)
                 {
                     Console.WriteLine("chaine vide");
                     trouve = 1;
-
 
                 }
                 else if (longueur == 1)
@@ -92,8 +92,7 @@ namespace ConsoleApplication4
                         longueur -= 1;
                         return true;
                     }
-                    else { Console.WriteLine("Item non trouvé dans la liste "); return false; }
-
+                    else { Console.WriteLine("Item non trouvï¿½ dans la liste "); return false; }
 
                 }
                 else if (index_long == longueur - 1)
@@ -107,12 +106,8 @@ namespace ConsoleApplication4
                     }
                     else
                     {
-
-
                         return false;
-
                     }
-
                 }
                 else if (first.value.Equals(item))
                 {
@@ -127,13 +122,11 @@ namespace ConsoleApplication4
                     longueur -= 1;
                     chaine_index.next = chaine_index.next.next;
                     return true;
-
                 }
 
                 index_long += 1;
                 chaine_index = chaine_index.next;
             }
-
 
             return false;
         }
@@ -142,7 +135,6 @@ namespace ConsoleApplication4
         {
             foreach (T item in this)
             { visitor(item); }
-
         }
 
         void IGenericChainedList<T>.Sort(IComparer<T> comparator)
@@ -153,17 +145,18 @@ namespace ConsoleApplication4
             }
             else
             {
+                //TODO : Why do you generate memory ?
                 GenericChainedList<T> tempi1 = new GenericChainedList<T>();
                 GenericChainedList<T> tempi2 = new GenericChainedList<T>();
 
                 tempi1 = first;
                 T tempo;
+
                 for (int i = 0; i < longueur - 1; i++)
                 {
                     tempi2 = tempi1.next;
                     for (int j = i + 1; j < longueur; j++)
                     {
-
                         if ((comparator.Compare(tempi1.value, tempi2.value) > 0))
                         {
                             tempo = tempi1.value;
@@ -175,7 +168,6 @@ namespace ConsoleApplication4
                     tempi1 = tempi1.next;
                 }
             }
-
         }
 
         void IGenericChainedList<T>.Reverse()
@@ -183,7 +175,6 @@ namespace ConsoleApplication4
             if (longueur == 0)
             {
                 Console.WriteLine("liste vide");
-
             }
             else
             {
@@ -192,13 +183,12 @@ namespace ConsoleApplication4
 
                 tempi1 = first;
                 T tempo;
+
                 for (int i = 0; i < longueur - 1; i++)
                 {
                     tempi2 = tempi1.next;
                     for (int j = i + 1; j < longueur; j++)
                     {
-
-
                         tempo = tempi1.value;
                         tempi1.value = tempi2.value;
                         tempi2.value = tempo;
@@ -208,14 +198,13 @@ namespace ConsoleApplication4
                     tempi1 = tempi1.next;
                 }
             }
-
         }
 
         void ICollection<T>.Add(T item)
         {
             this.Addo(item);
-
         }
+
         void ICollection<T>.Clear()
         {
             if (longueur > 0)
@@ -223,6 +212,7 @@ namespace ConsoleApplication4
                 T item = first.value;
                 int index_long = 0;
                 int longueur_initiale = longueur;
+
                 while (index_long < longueur_initiale)
                 {
                     this.Removo(item);
@@ -232,41 +222,37 @@ namespace ConsoleApplication4
                 }
             }
         }
+
         void ICollection<T>.CopyTo(T[] array, int index)
         {
             if ((array.Length - index) < longueur)
             {
                 Console.WriteLine("longueur de tableau non suffisante pour contenir la liste");
-
             }
             else
             {
-
                 GenericChainedList<T> tempi = new GenericChainedList<T>();
                 tempi = first;
-
 
                 for (int i = 0; i < longueur; i++)
                 {
                     array[index + i] = tempi.value;
 
-
                     tempi = tempi.next;
-
 
                 }
             }
         }
+
         bool ICollection<T>.Remove(T item)
         {
             return this.Removo(item);
-
         }
         int ICollection<T>.Count
         {
             get { return longueur; }
-
         }
+
         bool ICollection<T>.Contains(T item)
         {
             if (longueur == 0)
@@ -278,16 +264,13 @@ namespace ConsoleApplication4
                 GenericChainedList<T> tempi = new GenericChainedList<T>();
                 tempi = first;
 
-
                 for (int i = 0; i < longueur; i++)
                 {
                     if (tempi.value.Equals(item))
                     {
                         return true;
-
                     }
                     tempi = tempi.next;
-
                 }
                 return false;
             }
@@ -295,7 +278,6 @@ namespace ConsoleApplication4
         bool ICollection<T>.IsReadOnly
         {
             get { return false; }
-
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -309,6 +291,5 @@ namespace ConsoleApplication4
         {
             return (IEnumerator)GetEnumerator();
         }
-
     }
 }
